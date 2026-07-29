@@ -1,15 +1,32 @@
+
 <x-layout>
 
-    <div>
 
+    <div>
 
         <header class="py-8 md:py-12">
         <h1 class="text-3xl font-bold"> Your Ideas </h1>
 
         <p class="text-sm text-muted-foreground mt-2"> Make a plan! Capture your ideas and thoughts in one place. </p>
         </header>
-    </div>
+  
 
+        <div class="mb-6">
+             <a href="/ideas" 
+             class="btn {{ request('status') === null ? '' : 'btn-outlined' }}"> All             
+             <span class="ml-1 text-gray-600"> ({{ $counts['all'] }}) </span>             
+            </a>
+
+            @foreach (App\IdeaStatus::cases() as $status)
+
+            <a href="/ideas?status={{ $status->value }}" class="btn {{ request('status') === $status->value ? '' : 'btn-outlined' }}"> {{ $status->label() }} 
+            
+            <span class="pl-1 text-xs text-gray-600"> ({{ $counts[$status->value] }}) </span>
+            </a>
+            @endforeach
+
+        </div>
+    
     <div class="grid md:grid-cols-2 gap-6 text-muted-foreground">
 
         @forelse ($ideas as $idea)
@@ -29,6 +46,7 @@
             </x-Ideacard>
 
         @endforelse
+    </div>
     </div>
 
 </x-layout>

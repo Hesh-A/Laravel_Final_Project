@@ -1,25 +1,40 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Validation\Rule;
 use App\Models\Idea;
 use App\Http\Requests\StoreIdeaRequest;
 use App\Http\Requests\UpdateIdeaRequest;
 
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
+use App\IdeaStatus;
 
 class IdeaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+ 
 
-        $idea = Auth::user()->ideas()->get();
+        $user = Auth::user();
+
+        $validated = $request->validate([
+            'status' => ['nullable', Rule::enum(IdeaStatus::class)],
+        ]);
+
+        $status = $validated['status'] ?? null;
+
+        $ideas = $user->ideas()
+        ->when($status, fn($query, $status) => $query->where('status', $status))
+        ->get();
+
 
         return view('ideas.index', [
-            'ideas' => $idea
+            'ideas' => $ideas,
+            'counts' => Idea::statusCounts($user),
         ]);
     }
 

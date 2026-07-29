@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Models;
-
+use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
@@ -26,6 +26,20 @@ class Idea extends Model
     protected $attributes = [
         'status' => IdeaStatus::PENDING->value,
     ];
+
+
+    public static function statusCounts(User $user): Collection
+{
+        $statusCounts = $user->ideas()
+        ->selectRaw('status, count(*) as count')
+        ->groupBy('status')
+        ->pluck('count', 'status');
+
+        return collect(IdeaStatus::cases())
+        ->mapWithKeys(fn($status) => [$status->value => $statusCounts->get($status->value, 0)])
+        ->put('all', $user->ideas()->count());
+
+}
 
     
     public function user(): BelongsTo
