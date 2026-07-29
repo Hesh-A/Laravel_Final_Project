@@ -5,7 +5,7 @@
                 <x-forms.field name="email" label="Email" type="email" />
                 <x-forms.field name="password" label="Password" type="password" />
 
-                <button type="submit" class="btn w-full"> Register </button>
+                <button type="submit" class="btn w-full" data-test="register-button"> Register </button>
 
 
 

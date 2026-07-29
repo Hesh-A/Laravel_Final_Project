@@ -11,7 +11,7 @@
         <div class= "flex gap-x-6 items-center">
            <form action="/logout" method="POST">
                @csrf
-               <button type="submit" class="btn btn-danger"> Sign out </button>
+               <button type="submit" class="btn btn-danger" data-test="logout-button"> Sign out </button>
            </form>
         </div>            
         @endauth
