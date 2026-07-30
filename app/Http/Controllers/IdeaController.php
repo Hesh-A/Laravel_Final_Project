@@ -20,13 +20,10 @@ class IdeaController extends Controller
  
         $user = Auth::user();
 
-        $validated = $request->validate([
-            'status' => ['nullable', Rule::enum(IdeaStatus::class)],
-        ]);
+        $status = IdeaStatus::tryFrom($request->status ?? '');
 
-        $status = $validated['status'] ?? null;
-
-        $ideas = $user->ideas()
+        $ideas = $user
+        ->ideas()
         ->when($status, fn($query, $status) => $query->where('status', $status))
         ->get();
 
@@ -49,7 +46,11 @@ class IdeaController extends Controller
      */
     public function store(StoreIdeaRequest $request)
     {
-        //
+        $user = Auth::user();
+
+        $idea = $user->ideas()->create($request->validated());
+
+        return redirect()->route('idea.index')->with('success', 'Idea created successfully!');
     }
 
     /**

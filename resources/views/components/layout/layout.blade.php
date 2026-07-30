@@ -6,11 +6,11 @@
     <title>Idea</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class= "bg-background text-foreground">
+<body class= "bg-background text-foreground overflow-x-hidden">
   
     <x-layout.nav />
 
- <main class="px-6 py-7 mx-auto max-w-7xl space-y-6">
+ <main class="w-full space-y-6 px-4 py-6 sm:px-6 sm:py-7">
 
    {{ $slot }}
 
