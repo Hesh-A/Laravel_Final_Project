@@ -4,7 +4,7 @@
 
 
 @php
-    $classes = 'inline-block text-xs mt-2 border px-2 py-1 rounded-full';
+    $classes = 'inline-block text-xs font-bold  border px-2 py-1 rounded-full';
 
     if($status === 'pending'){
 
@@ -22,7 +22,7 @@
            
            
 
-<span {{ $attributes(['class' => $classes]) }}>
+<span {{ $attributes->merge(['class' => $classes]) }}>
                      {{ $slot }}
 
  </span>

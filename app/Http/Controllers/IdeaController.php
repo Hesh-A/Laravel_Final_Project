@@ -18,7 +18,6 @@ class IdeaController extends Controller
     public function index(Request $request)
     {
  
-
         $user = Auth::user();
 
         $validated = $request->validate([
@@ -30,7 +29,6 @@ class IdeaController extends Controller
         $ideas = $user->ideas()
         ->when($status, fn($query, $status) => $query->where('status', $status))
         ->get();
-
 
         return view('ideas.index', [
             'ideas' => $ideas,
@@ -59,7 +57,9 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
-        //
+        return view('ideas.show', [
+            'idea' => $idea,
+        ]);
     }
 
     /**
@@ -83,6 +83,10 @@ class IdeaController extends Controller
      */
     public function destroy(Idea $idea)
     {
-        //
+        //authorize first
+
+        $idea->delete();
+
+        return redirect()->route('idea.index')->with('success', 'Idea deleted successfully!');
     }
 }
