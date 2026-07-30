@@ -46,6 +46,7 @@ class IdeaController extends Controller
      */
     public function store(StoreIdeaRequest $request)
     {
+
         $user = Auth::user();
 
         $idea = $user->ideas()->create($request->validated());
