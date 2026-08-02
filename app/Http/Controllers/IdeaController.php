@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-use Illuminate\Validation\Rule;
-use App\Models\Idea;
+
+use App\Actions\CreateIdea;
 use App\Http\Requests\StoreIdeaRequest;
 use App\Http\Requests\UpdateIdeaRequest;
-
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use App\IdeaStatus;
+use App\Models\Idea;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class IdeaController extends Controller
 {
@@ -17,15 +17,15 @@ class IdeaController extends Controller
      */
     public function index(Request $request)
     {
- 
+
         $user = Auth::user();
 
         $status = IdeaStatus::tryFrom($request->status ?? '');
 
         $ideas = $user
-        ->ideas()
-        ->when($status, fn($query, $status) => $query->where('status', $status))
-        ->get();
+            ->ideas()
+            ->when($status, fn ($query, $status) => $query->where('status', $status))
+            ->get();
 
         return view('ideas.index', [
             'ideas' => $ideas,
@@ -44,12 +44,9 @@ class IdeaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreIdeaRequest $request)
+    public function store(StoreIdeaRequest $request, CreateIdea $action)
     {
-
-        $user = Auth::user();
-
-        $idea = $user->ideas()->create($request->validated());
+        $action->handle($request->safe()->all());
 
         return redirect()->route('idea.index')->with('success', 'Idea created successfully!');
     }
@@ -85,7 +82,7 @@ class IdeaController extends Controller
      */
     public function destroy(Idea $idea)
     {
-        //authorize first
+        // authorize first
 
         $idea->delete();
 

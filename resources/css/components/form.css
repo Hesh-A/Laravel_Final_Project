@@ -78,11 +78,18 @@ input[type=file]::file-selector-button {
     line-height: 1.25rem;
     font-weight: 500;
     background-color: var(--color-primary);
-    color: rgb(var(--color-background));
+    color: var(--color-primary-foreground);
+    cursor: pointer;
+    transition-property: color, background-color, border-color, opacity, box-shadow, transform;
+    transition-duration: 150ms;
 }
 
 input[type=file]::file-selector-button:hover {
-    opacity: 0.9;
+    background-color: color-mix(in oklab, var(--color-primary) 88%, black);
+}
+
+input[type=file]::file-selector-button:active {
+    transform: translateY(1px);
 }
 
 .error {

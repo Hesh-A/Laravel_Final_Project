@@ -34,11 +34,18 @@
         </div>
 
         <div class= "mt-6 text-muted-foreground">
-            <div class="grid gap-6 lg:grid-cols-2">
+            <div class="grid  md:grid-cols-2 gap-6">
 
                 @forelse ($ideas as $idea)
                     <x-Ideacard href="{{ route('idea.show', $idea) }}">
-                        <h3 class="mb-2 text-foreground text-lg"> {{ $idea->title }} </h3>
+                        @if ($idea->image_path)
+
+                        <div class="mb-4 -mx-4 -mt-4 h-48 overflow-hidden rounded-t-lg">
+                            <img src="{{ asset('storage/' . $idea->image_path) }}" alt="{{ $idea->title }}"
+                                class="h-full w-full object-cover">
+                        </div>
+                        @endif                        
+                        <h3 class="text-foreground text-lg"> {{ $idea->title }} </h3>
 
                         <x-idea.statuscard status="{{ $idea->status }}">
                             {{ $idea->status->label() }}
@@ -59,12 +66,21 @@
     <!-- Modal for creating a new idea -->
     <x-modal modalName="create-idea" label="Create New Idea" title="Create A New Idea">
 
-        <form x-data="{
+        <form 
+        x-data="{
             status: 'pending',
             newLink: '',
             links: [],
+            newStep: '',
+            steps: [],
+            hasImage: false
         
-        }" action="{{ route('idea.store') }}" method="POST">
+        }" 
+           action="{{ route('idea.store') }}"
+           method="POST"
+           class="space-y-4"
+           x-bind:enctype="hasImage ? 'multipart/form-data' : false"
+        >
             @csrf
 
             <div class="space-y-6 mt-6">
@@ -79,7 +95,7 @@
                             <button class="btn btn-outlined hover:bg-gray-700/60 flex-1 items-center" type="button"
                                 data-test="status-button-{{ $status->value }}"
                                 @click="status = @js($status->value)"
-                                :class="status === @js($status->value) ? 'bg-green-700/60' : ''">
+                                :class="status === @js($status->value) ? 'bg-primary/95 text-black' : ''">
 
                                 {{ $status->label() }}
 
@@ -94,6 +110,80 @@
                 <x-forms.field name="description" placeholder="Enter a description for your idea.." label="Description"
                     type="textarea" />
 
+
+                <div class="space-y-3">
+
+                    <label for="image" class="label"> Image </label>
+
+                    <input 
+                     type= "file"
+                     id="image"
+                     name="image"
+                     accept="image/*"  
+                     @change="hasImage = $event.target.files.length > 0" 
+                    > 
+                    </input>
+                    <x-forms.error name="image" />
+                    
+
+
+                </div>
+
+                <!--Steps area -->
+
+                <div>
+
+                    <fieldset class="space-y-3">
+
+                        <legend class="label"> Actionable Steps </legend>
+
+                        <template x-for= "(step,index) in steps" :key="step">
+
+                         <div class="flex gap-x-3">
+                            <input name="steps[]" 
+                             x-model="step"
+                             class="input flex-1"
+                             readonly
+                            />
+                            <button 
+                                type="button"
+                                class="btn btn-outlined text-sm text-red-500/60 hover:text-red-700 flex items-center gap-x-2"
+                                @click="steps.splice(index, 1)"
+                                aria-label="Delete the Step"
+                                >
+                                <x-icons.delete-bin />
+                                Remove Step
+                            </button>                            
+                         </div>
+                        
+                        </template>
+
+
+                        <div class="flex gap-x-3">
+                            <input x-model="newStep"
+                              type="text"
+                              id="new-step"
+                              data-test="new-step"
+                              placeholder="What needs to be done??" autoComplete="off" class="input flex-1 text-sm" />
+                            <button 
+                                type="button"
+                                class="btn btn-outlined hover:bg-gray-700/60 flex items-center gap-x-2"
+                                @click="steps.push(newStep.trim()); newStep = '';"
+                                :disabled="!newStep.trim()"
+                                data-test="add-new-step-button"
+                                aria-label="Add New Step"
+                                >
+                                <x-icons.close class="rotate-45" />
+                                Add Step
+                            </button>
+                        </div>
+                    </fieldset>
+
+                </div>
+
+
+                 <!--links input field and add button -->
+
                 <div>
 
                     <fieldset class="space-y-3">
@@ -104,6 +194,7 @@
                             <input name="links[]" 
                              x-model="link"
                              class="input flex-1"
+                             readonly
                             />
                             <button 
                                 type="button"

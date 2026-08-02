@@ -1,10 +1,11 @@
 <?php
 
 namespace App\Http\Requests;
-use Illuminate\Validation\Rule;
+
 use App\IdeaStatus;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreIdeaRequest extends FormRequest
 {
@@ -28,7 +29,10 @@ class StoreIdeaRequest extends FormRequest
             'description' => ['nullable', 'string'],
             'status' => ['required', 'string', Rule::enum(IdeaStatus::class)],
             'links' => ['nullable', 'array'],
-            'links.*' => [ 'url', 'max:255'],
+            'links.*' => ['url', 'max:255'],
+            'steps' => ['nullable', 'array'],
+            'steps.*' => ['string', 'max:255'],
+            'image' => ['nullable', 'image', 'max:5120'],
         ];
     }
 }

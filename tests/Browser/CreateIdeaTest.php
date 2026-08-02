@@ -14,6 +14,10 @@ it('creates an idea', function () {
 		->fill('title', 'Build something')
         ->click('@status-button-pending')
 		->fill('description', 'Create happy path.')
+		->fill('@new-step', 'Step 1')
+		->click('@add-new-step-button')
+		->fill('@new-step', 'Step 2')
+		->click('@add-new-step-button')
 		->fill('@new-link', 'https://www.example.com')
 		->click('@add-new-link-button')
 		->fill('@new-link', 'https://www.laravel.com')
@@ -21,13 +25,23 @@ it('creates an idea', function () {
 		->click('@store-idea-button')
 		->assertPathIs('/ideas');
 
-	expect($user->ideas()->first())->toMatchArray([
+	$idea = $user->ideas()->first();
+
+	expect($idea)->toMatchArray([
 		'title' => 'Build something',
 		'description' => 'Create happy path.',
 		'status' => 'pending',
-		'links' => ['https://www.example.com', 'https://www.laravel.com'],
 	]);
-});
+
+	expect($idea->links->toArray())->toBe([
+		'https://www.example.com',
+		'https://www.laravel.com',
+	]);
+
+	expect($idea->steps->count())->toBe(2);
+	});
+
+
 
 it('handles invalid idea creation', function () {
 	//when a user is authenticated
