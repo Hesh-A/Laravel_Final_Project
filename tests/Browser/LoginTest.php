@@ -3,7 +3,7 @@
 use App\Models\User;
 
 it('logs in a user', function () {
-    //when a user exists in the database
+    // when a user exists in the database
     User::factory()->create([
         'email' => 'johndoe@mail.com',
         'password' => 'password12345',
@@ -16,21 +16,19 @@ it('logs in a user', function () {
         ->assertPathIs('/');
 });
 
-
-it ('logs out a user', function () {
-    //when a user exists in the database
+it('logs out a user', function () {
+    // when a user exists in the database
     $user = User::factory()->create();
 
     $this->actingAs($user);
-  
+
     // the logout works
     visit('/')
         ->click('@logout-button')
         ->assertPathIs('/login');
 
-    
     $this->assertGuest();
-    
+
 });
 
 it('handles invalid login', function () {
@@ -38,7 +36,7 @@ it('handles invalid login', function () {
         ->fill('email', ' ')
         ->fill('password', ' ')
         ->click('@login-button')
-        
+
         ->assertPathIs('/login');
-    
+
 });
