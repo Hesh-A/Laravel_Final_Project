@@ -2,8 +2,6 @@
 
 use App\Models\Idea;
 use App\Models\User;
-use App\Models\Step;
-
 
 it('creates an idea', function () {
 
@@ -20,15 +18,13 @@ it('belongs to a user', function () {
 });
 
 it('has many steps', function () {
-  $idea = Idea::factory()->create();
+    $idea = Idea::factory()->create();
 
-  $idea->steps()->create([
-    'description' => 'Step 1',
-    
-  ]);
+    $idea->steps()->create([
+        'description' => 'Step 1',
 
-  expect($idea->fresh()->steps)->toHaveCount(1);
+    ]);
+
+    expect($idea->fresh()->steps)->toHaveCount(1);
 
 });
-
-

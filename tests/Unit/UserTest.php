@@ -1,9 +1,6 @@
 <?php
 
-use App\Models\Idea;
 use App\Models\User;
-use App\Models\Step;
-
 
 it('creates a user', function () {
 
@@ -24,7 +21,3 @@ it('has many ideas', function () {
     expect($user->ideas)->toHaveCount(1);
     expect($user->ideas->first()->title)->toBe('Test Idea');
 });
-
-
-
-
