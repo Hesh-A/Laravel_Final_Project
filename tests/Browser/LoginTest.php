@@ -13,7 +13,7 @@ it('logs in a user', function () {
         ->fill('email', 'johndoe@mail.com')
         ->fill('password', 'password12345')
         ->click('@login-button')
-        ->assertPathIs('/');
+        ->assertPathIs('/ideas');
 });
 
 it('logs out a user', function () {

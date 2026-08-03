@@ -33,7 +33,7 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended('/')->with('success', 'You are logged in successfully!');
+        return redirect()->intended(route('idea.index'))->with('success', 'You are logged in successfully!');
     }
 
     public function destroy(Request $request)
