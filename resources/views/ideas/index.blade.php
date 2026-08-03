@@ -11,8 +11,8 @@
             </p>
 
             <x-Ideacard x-data @click="$dispatch('open-modal', {name: 'create-idea'})" is="button" type="button"
-                data-test="create-idea-button" class="mt-10 cursor-pointer h-32 text-left w-full">
-                <p> Hey whats up!!! </p>
+                data-test="create-idea-button" class="mt-10 cursor-pointer flex items-center justify-center text-gray-200/50 h-32 text-left w-full">
+                <p> Click here to create a new idea! </p>
             </x-Ideacard>
 
         </header>
