@@ -10,11 +10,15 @@
             </a>
 
             <div class="flex flex-wrap items-center gap-3">
-                <a href=" "
-                    class="btn btn-outlined flex items-center gap-x-2 text-muted-foreground hover:text-foreground">
+                <button
+                    x-data
+                    @click="$dispatch('open-modal', {name: 'edit-idea'})"
+                    class="btn btn-outlined flex items-center gap-x-2 text-muted-foreground hover:text-foreground"
+                    data-test="edit-idea-button"                
+                    >
                     <x-icons.external />
                     Edit Idea
-                </a>
+                </button>
 
                 <form method="POST" action="{{ route('idea.destroy', $idea) }}">
                     @csrf
@@ -106,6 +110,7 @@
             @endif
 
         </div>
-
+      <!-- Modal for editing an idea -->
+      <x-idea.modal :idea="$idea" />
     </div>
 </x-layout>

@@ -5,21 +5,12 @@ declare(strict_types=1);
 namespace App\Actions;
 
 use App\Models\Idea;
-use App\Models\User;
-use Illuminate\Container\Attributes\CurrentUser;
 use Illuminate\Support\Facades\DB;
 
-class CreateIdea
+class UpdateIdea
 {
-    public function __construct(#[CurrentUser] protected ?User $user = null)
+    public function handle(array $attributes, Idea $idea): Idea
     {
-        //
-    }
-
-    public function handle(array $attributes): Idea
-    {
-        $user = $this->user ?? auth()->user();
-
         $data = collect($attributes)->only(['title', 'description', 'status', 'image_path', 'links'])
             ->toArray();
 
@@ -29,8 +20,10 @@ class CreateIdea
 
         // create the steps
 
-        return DB::transaction(function () use ($data, $attributes, $user) {
-            $idea = $user->ideas()->create($data);
+        return DB::transaction(function () use ($data, $attributes, $idea): Idea {
+            $idea->update($data);
+
+            $idea->steps()->delete();
 
             $idea->steps()->createMany($attributes['steps'] ?? []);
 
