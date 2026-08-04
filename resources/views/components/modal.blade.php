@@ -29,7 +29,7 @@
 
     >
 
-    <x-Ideacard @click.away="show = false"  class="shadow-xl max-w-2xl w-full max-h-[80dvh] overflow-auto">
+    <x-Ideacard @click.away="show = false"  class="sleek-scroll shadow-xl max-w-2xl w-full max-h-[80dvh] overflow-auto">
         <div class="flex items-center justify-between mb-6">
         <h2 id="modal-{{ $modalName }}-title" class="text-lg font-semibold text-foreground"> {{ $title }} </h2>
 

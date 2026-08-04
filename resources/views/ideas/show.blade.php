@@ -44,6 +44,12 @@
             @endif
             <h1 class="text-3xl font-bold sm:text-4xl"> {{ $idea->title }} </h1>
 
+            <p class="mt-2 text-xs">
+            <span class="inline-flex items-center rounded-full bg-secondary/15 px-2 py-1 text-secondary">
+            Created by {{ $idea->user->name }}
+            </span>
+            </p>            
+
             <div class= "mt-2 flex gap-x-3  items-center">
                 <x-idea.statuscard status="{{ $idea->status }}">
                     {{ $idea->status->label() }}

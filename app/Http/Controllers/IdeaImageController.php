@@ -13,7 +13,7 @@ class IdeaImageController extends Controller
     public function destroy(Idea $idea)
     {
         // Check if the authenticated user is the owner of the idea
-        Gate::authorize('canAccess', $idea);
+        Gate::authorize('canModify', $idea);
 
         Storage::disk('public')->delete($idea->image_path);
 

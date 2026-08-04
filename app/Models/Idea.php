@@ -27,16 +27,16 @@ class Idea extends Model
         'status' => IdeaStatus::PENDING->value,
     ];
 
-    public static function statusCounts(User $user): Collection
+    public static function statusCounts(Collection $ideas): Collection
     {
-        $statusCounts = $user->ideas()
+        $statusCounts = Idea::query()
             ->selectRaw('status, count(*) as count')
             ->groupBy('status')
             ->pluck('count', 'status');
 
         return collect(IdeaStatus::cases())
             ->mapWithKeys(fn ($status) => [$status->value => $statusCounts->get($status->value, 0)])
-            ->put('all', $user->ideas()->count());
+            ->put('all', $ideas->count());
 
     }
 

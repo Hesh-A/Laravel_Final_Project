@@ -12,8 +12,13 @@ class IdeaPolicy
     /**
      * Determine whether the user can view any models.
      */
-    public function canAccess(User $user, Idea $idea): bool
+    public function canModify(User $user, Idea $idea): bool
     {
         return $idea->user->is($user);
+    }
+
+    public function canView(User $user, Idea $idea): bool
+    {
+        return true;
     }
 }

@@ -2,6 +2,7 @@
 
 @import './components/btn.css' layer(components);
 @import './components/form.css' layer(components);
+@import './components/scrollbar.css' layer(components);
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -25,3 +26,4 @@
     --color-input: oklch(0.24 0 0);
     --color-muted-foreground: oklch(0.6 0 0);
 }
+
