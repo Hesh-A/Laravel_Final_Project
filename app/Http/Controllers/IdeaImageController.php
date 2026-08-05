@@ -17,7 +17,6 @@ class IdeaImageController extends Controller
 
         Storage::disk('public')->delete($idea->image_path);
 
-        // Delete the image associated with the idea
         $idea->update(['image_path' => null]);
         $idea->save();
 
