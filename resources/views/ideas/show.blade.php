@@ -10,6 +10,7 @@
             </a>
 
             <div class="flex flex-wrap items-center gap-3">
+                @if($idea->user_id === auth()->id() || $idea->isCollaborator(auth()->user()))
                 <button
                     x-data
                     @click="$dispatch('open-modal', {name: 'edit-idea'})"
@@ -19,6 +20,19 @@
                     <x-icons.external />
                     Edit Idea
                 </button>
+                @else
+                <form method="POST" action="{{ route('ideas.collaboration.request', $idea) }}">
+                    @csrf
+                    <button
+                        class="btn btn-outlined flex items-center gap-x-2 text-muted-foreground hover:text-foreground"
+                        data-test="edit-idea-button"                
+                        >
+                        <x-icons.external />
+                        Request Edit Access
+                    </button>
+                </form>
+                @endif
+                
 
                 @if ($idea->user_id === auth()->id())
                 <form method="POST" action="{{ route('idea.destroy', $idea) }}">
@@ -36,6 +50,25 @@
 
             </div>
 
+        </div>
+
+
+              <!-- Auto-refresh the page every 5 seconds if the user is not typing in an input field -->
+        <div
+            x-data="{ timer: null }"
+            x-init="timer = setInterval(() => {
+                const active = document.activeElement;
+                const isTyping = active && (
+                    active.tagName === 'INPUT' ||
+                    active.tagName === 'TEXTAREA' ||
+                    active.tagName === 'SELECT'
+                );
+
+                if (!isTyping && document.visibilityState === 'visible' && document.hasFocus()) {
+                    window.location.reload();
+                }
+            }, 5000)"
+            x-unmount="clearInterval(timer)">
         </div>
 
         <div class="mt-8 space-y-6">
@@ -62,110 +95,27 @@
                 <div class= " text-muted-foreground text-sm"> Created: {{ $idea->created_at->diffForHumans() }}
 
                 </div>
-
-
             </div>
+
+            @if ($idea->user_id === auth()->id())
+                <x-idea.collaborator-section :idea="$idea" :pendingCollaborators="$pendingCollaborators" />
+            @endif
+            
+        
             <x-Ideacard>
 
                 <div class="cursor-pointer text-foreground"> {{ $idea->description }} </div>
 
             </x-Ideacard>
-
-            @if ($idea->steps->count())
-                <h2 class="text-xl font-bold mt-6 mb-2"> Actionable Steps </h2>
-                <div class= "space-y-3">
-                    @foreach ($idea->steps as $step)
-                        <x-Ideacard>
-
-                            <form action="{{ route('step.update', $step) }}" method="POST">
-                                @csrf
-                                @method('PATCH')
-                                <div class = "flex items-center gap-x-3">
-
-                                    <button type="submit" role="checkbox"
-                                        aria-checked="{{ $step->is_completed ? 'true' : 'false' }}"
-                                        class="size-4 flex items-center justify-center rounded-lg text-primary-foreground border
-                                    border-primary hover:bg-primary/30 {{ $step->is_completed ? 'bg-primary' : '' }}">
-                                        &check;
-                                    </button>
-
-                                    <span
-                                        class=" {{ $step->is_completed ? ' line-through text-muted-foreground' : '' }}">
-                                        {{ $step->description }} </span>
-
-
-
-                                </div>
-                            </form>
-
-                        </x-Ideacard>
-                    @endforeach
-                </div>
-            @endif
-
-            @if ($idea->links)
-                <h2 class="text-xl font-bold mt-6 mb-2"> Links </h2>
-                <div class= "space-y-3">
-                    @forelse ($idea->links as $link)
-                        <x-Ideacard :href="$link"
-                            class="cursor-pointer break-all text-primary/80
-                            hover:text-primary flex items-center gap-x-3
-                            font-medium">
-
-                            <x-icons.external class="text-muted-foreground" />
-                            {{ $link }}
-
-                        </x-Ideacard>
-                    @empty
-                        <p class="text-sm text-muted-foreground">No links available.</p>
-                    @endforelse
-                </div>
-            @endif
             
-            <!-- Comments Section -->
 
-            <div class="mt-6 flex items-center justify-between">
-                <h2 class="text-xl font-bold">Comments ({{ $idea->comments->count() }})</h2>
-                @if ($idea->user_id !== auth()->id())
-                <button
-                    x-data
-                    @click="$dispatch('open-modal', {name: 'create-comment'})"
-                    class="btn btn-outlined flex items-center gap-x-2 text-muted-foreground hover:text-foreground"
-                    data-test="comment-button">
-                    <x-icons.message-bubble />
-                    Add Comment
-                </button>
-                @endif
-            </div>
 
-            @if ($idea->comments->count())
-                <div class="space-y-3">
-                    @foreach ($idea->comments as $comment)
-                        <x-Ideacard>
-                            <div class="mt-2 flex justify-between items-center gap-x-3">
-                            <p class="text-sm">{{ $comment->content }}</p>
 
-                            <form action="{{ route('comment.destroy', $comment) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit"
-                                    class="btn btn-outlined text-red-500/60 flex items-center gap-x-2 hover:text-red-500"
-                                    data-test="delete-comment-button">
-                                    <x-icons.delete-bin />
-                                </button>
-                            </form>
+            <x-idea.steps-section :idea="$idea" />
 
-                            </div>
-                            <div class="mt-2 flex items-center gap-x-3">
-                                <span class="inline-flex items-center rounded-full bg-secondary/15 px-2 py-1 text-xs text-secondary">
-                                    {{ $comment->user->name }}
-                                </span>
-                                <span class="text-xs text-muted-foreground">{{ $comment->created_at->diffForHumans() }}</span>
-                            </div>
-                        </x-Ideacard>
-                    @endforeach
-                </div>
-            @endif
+            <x-idea.links-section :idea="$idea" />
+
+            <x-idea.comments-section :idea="$idea" />
 
         </div>
       <!-- Modal for editing an idea -->
