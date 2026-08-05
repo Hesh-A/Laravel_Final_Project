@@ -12,6 +12,7 @@ use App\Enums\IdeaStatus;
 use App\Models\Idea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Models\Comment;
 
 class IdeaController extends Controller
 {
@@ -49,8 +50,9 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
-
         Gate::authorize('canView', $idea);
+
+        $idea->load('comments.user');
 
         return view('ideas.show', [
             'idea' => $idea,

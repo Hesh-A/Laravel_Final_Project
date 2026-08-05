@@ -13,6 +13,10 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 
+use App\Models\Comment;
+use App\Models\Step;
+use App\Models\User;
+
 class Idea extends Model
 {
     /** @use HasFactory<IdeaFactory> */
@@ -49,5 +53,10 @@ class Idea extends Model
     public function steps(): HasMany
     {
         return $this->hasMany(Step::class);
+    }
+
+    public function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
     }
 }
