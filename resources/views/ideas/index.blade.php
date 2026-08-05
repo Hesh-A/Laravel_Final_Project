@@ -70,9 +70,8 @@
     </div>
 
     <!-- Modal for creating a new idea -->
-    <x-idea.modal >
-        
 
+    <x-idea.modal>
     </x-idea.modal>
 
 </x-layout>
