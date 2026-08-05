@@ -10,6 +10,7 @@ use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\StepController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\IdeaCollaborationController;
 
 Route::redirect('/', '/ideas');
 
@@ -23,6 +24,9 @@ Route::patch('/ideas/{idea}', [IdeaController::class, 'update'])->name('idea.upd
 Route::patch('steps/{step}', [StepController::class, 'update'])->name('step.update')->middleware('auth');
 Route::post('/ideas/{idea}/comments', [CommentController::class, 'store'])->name('comment.store')->middleware('auth');
 Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comment.destroy')->middleware('auth');
+
+Route::post('/ideas/{idea}/collaboration', [IdeaCollaborationController::class, 'requestCollaboration'])->name('ideas.collaboration.request')->middleware('auth');
+Route::patch('/collaborators/{collaborator}/approve', [IdeaCollaborationController::class, 'approve'])->name('collaborator.approve')->middleware('auth');
 
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register')->middleware('guest');
 Route::post('/register', [RegisteredUserController::class, 'store'])->middleware('guest');

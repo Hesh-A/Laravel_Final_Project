@@ -9,6 +9,7 @@ use App\Actions\UpdateIdea;
 use App\Http\Requests\IdeaRequest;
 use App\Actions\ListIdea;
 use App\Enums\IdeaStatus;
+use App\CollaborationStatus;
 use App\Models\Idea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -27,13 +28,6 @@ class IdeaController extends Controller
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-      //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -52,19 +46,15 @@ class IdeaController extends Controller
     {
         Gate::authorize('canView', $idea);
 
-        $idea->load('comments.user');
-
+        $idea->load('comments.user', 'collaborators.user', 'steps');
+        $pendingCollaborators = $idea->collaborators()
+         ->where('status', CollaborationStatus::PENDING)
+         ->with('user')
+         ->get();
         return view('ideas.show', [
             'idea' => $idea,
+            'pendingCollaborators' => $pendingCollaborators,
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Idea $idea): void
-    {
-        //
     }
 
     /**

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\IdeaStatus;
-use Database\Factories\IdeaFactory;
+
+
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -16,6 +16,9 @@ use Illuminate\Support\Collection;
 use App\Models\Comment;
 use App\Models\Step;
 use App\Models\User;
+
+use App\IdeaStatus;
+use App\CollaborationStatus;
 
 class Idea extends Model
 {
@@ -58,5 +61,15 @@ class Idea extends Model
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+
+    public function isCollaborator(User $user): bool
+    {
+        return $this->collaborators()->where('user_id', $user->id)->where('status', CollaborationStatus::APPROVED)->exists();
+    }
+
+    public function collaborators(): HasMany
+    {
+        return $this->hasMany(IdeaCollaborator::class);
     }
 }

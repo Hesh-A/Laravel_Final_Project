@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\Models\Comment;
 use App\Models\Idea;
+use App\Models\IdeaCollaborator;
 
 use Database\Factories\UserFactory;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -47,4 +48,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Comment::class);
     }
+
+    public function collaborations(): HasMany
+    {
+        return $this->hasMany(IdeaCollaborator::class);
+    }
+
 }
