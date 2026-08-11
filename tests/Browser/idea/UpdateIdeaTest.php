@@ -2,6 +2,8 @@
 
 use App\Models\Idea;
 use App\Models\User;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 it('edits an idea', function () {
     // when a user is authenticated
@@ -46,4 +48,29 @@ it('edits an idea', function () {
         'https://www.laravel.com',
     ]);
 
+});
+
+it('removes an idea image from the edit modal', function () {
+    $user = User::factory()->create();
+    $this->actingAs($user);
+
+    $imagePath = UploadedFile::fake()->image('idea.jpg')->store('ideas', 'public');
+
+    $idea = Idea::factory()->for($user)->create([
+        'title' => 'Idea with image',
+        'description' => 'Has an uploaded image.',
+        'status' => 'pending',
+        'image_path' => $imagePath,
+        'links' => [],
+    ]);
+
+    Storage::disk('public')->assertExists($imagePath);
+
+    visit(route('idea.show', $idea))
+        ->click('@edit-idea-button')
+        ->click('@delete-image-button')
+        ->assertPathIs('/ideas/'.$idea->id);
+
+    expect($idea->fresh()->image_path)->toBeNull();
+    Storage::disk('public')->assertMissing($imagePath);
 });
