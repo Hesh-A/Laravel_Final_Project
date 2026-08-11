@@ -34,14 +34,6 @@ class IdeaController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): void
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(IdeaRequest $request, CreateIdea $action)
@@ -62,14 +54,6 @@ class IdeaController extends Controller
         return view('ideas.show', [
             'idea' => $idea,
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Idea $idea): void
-    {
-        //
     }
 
     /**
