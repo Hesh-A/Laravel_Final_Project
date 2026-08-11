@@ -11,12 +11,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Collection;
 
 class Idea extends Model
 {
     /** @use HasFactory<IdeaFactory> */
     use HasFactory;
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Idea $idea): void {
+            if ($idea->image_path) {
+                Storage::disk('public')->delete($idea->image_path);
+            }
+        });
+    }
 
     protected $casts = [
         'links' => AsArrayObject::class,

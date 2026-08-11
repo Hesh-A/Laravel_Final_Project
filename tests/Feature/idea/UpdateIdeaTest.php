@@ -2,6 +2,8 @@
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 uses(RefreshDatabase::class);
 
@@ -56,3 +58,44 @@ it('updates an idea for an authenticated user', function () {
         'description' => 'Do first step',
     ]);
 });
+
+it('updates an image' , function () {
+    $user = User::factory()->create();
+
+    $idea = $user->ideas()->create([
+        'title' => 'My first idea',
+        'description' => 'Feature test description',
+        'status' => 'pending',
+        'links' => ['https://example.com'],
+    ]);
+
+    $payload = [
+        'title' => 'Updated idea',
+        'description' => 'Updated description',
+        'status' => 'completed',
+        'links' => ['https://updated-example.com'],
+        'image' => UploadedFile::fake()->image('updated-idea.jpg'),
+    ];
+
+    Storage::fake('public');
+
+    $response = $this
+        ->actingAs($user)
+        ->patch(route('idea.update', $idea), $payload);
+
+    $response->assertRedirect(route('idea.show', $idea));
+    $response->assertSessionHasNoErrors();
+
+    $this->assertDatabaseHas('ideas', [
+        'id' => $idea->id,
+        'title' => 'Updated idea',
+        'description' => 'Updated description',
+        'status' => 'completed',
+        'user_id' => $user->id,
+    ]);
+
+    expect($idea->fresh()->image_path)->not->toBeNull();
+});
+
+
+
