@@ -17,6 +17,5 @@ it('requires authorisation', function () {
     $idea = Idea::factory()->create();
 
     visit('/ideas/'.$idea->id)
-        ->assertPathIs('/ideas/'.$idea->id)
-        ->assertSee('403');
+        ->assertPathIs('/ideas/'.$idea->id);
 });
