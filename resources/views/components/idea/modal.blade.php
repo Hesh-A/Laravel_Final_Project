@@ -120,11 +120,11 @@
                             />
 
                             <input type="hidden"
-                             :name="`steps[${index}][is_completed]`" 
-                             x-model="step.is_completed ? '1' : '0'"
+                             :name="`steps[${index}][is_completed]`"
+                             :value="step.is_completed ? '1' : '0'"
                              class="input flex-1"
                              readonly
-                            />                            
+                            />
                             <button 
                                 type="button"
                                 class="btn btn-outlined text-sm hover:bg-gray-700/60 hover:text-red-700 flex items-center gap-x-2"

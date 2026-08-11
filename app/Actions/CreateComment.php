@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\Actions;
 
-use App\Models\Idea;
+use App\Events\CommentCreated;
 use App\Models\Comment;
 use App\Models\User;
 use Illuminate\Container\Attributes\CurrentUser;
@@ -25,6 +25,7 @@ class CreateComment
 
         return DB::transaction(function () use ($data, $user) {
             $comment = $user->comments()->create($data);
+            event(new CommentCreated($comment));
 
             return $comment;
         });

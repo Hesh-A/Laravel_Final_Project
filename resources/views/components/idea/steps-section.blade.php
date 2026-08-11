@@ -9,7 +9,9 @@
                     @csrf
                     @method('PATCH')
                     <div class="flex items-center gap-x-3">
-                        <button type="submit" role="checkbox"
+                        <button type="submit" 
+                        data-test="step-complete-button"
+                        role="checkbox"
                             aria-checked="{{ $step->is_completed ? 'true' : 'false' }}"
                             class="size-4 flex items-center justify-center rounded-lg text-primary-foreground border border-primary hover:bg-primary/30 {{ $step->is_completed ? 'bg-primary' : '' }}">
                             &check;

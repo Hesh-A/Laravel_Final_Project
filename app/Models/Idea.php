@@ -4,26 +4,29 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-
-
+use App\CollaborationStatus;
+use App\IdeaStatus;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
-
-use App\Models\Comment;
-use App\Models\Step;
-use App\Models\User;
-
-use App\IdeaStatus;
-use App\CollaborationStatus;
+use Illuminate\Support\Facades\Storage;
 
 class Idea extends Model
 {
     /** @use HasFactory<IdeaFactory> */
     use HasFactory;
+
+    protected static function booted(): void
+    {
+        static::deleting(function (Idea $idea): void {
+            if ($idea->image_path) {
+                Storage::disk('public')->delete($idea->image_path);
+            }
+        });
+    }
 
     protected $casts = [
         'links' => AsArrayObject::class,

@@ -53,23 +53,6 @@
         </div>
 
 
-              <!-- Auto-refresh the page every 5 seconds if the user is not typing in an input field -->
-        <div
-            x-data="{ timer: null }"
-            x-init="timer = setInterval(() => {
-                const active = document.activeElement;
-                const isTyping = active && (
-                    active.tagName === 'INPUT' ||
-                    active.tagName === 'TEXTAREA' ||
-                    active.tagName === 'SELECT'
-                );
-
-                if (!isTyping && document.visibilityState === 'visible' && document.hasFocus()) {
-                    window.location.reload();
-                }
-            }, 5000)"
-            x-unmount="clearInterval(timer)">
-        </div>
 
         <div class="mt-8 space-y-6">
             
