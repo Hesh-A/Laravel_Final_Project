@@ -1,9 +1,24 @@
 @props(['idea'])
 
+@php
+    $initialComments = $idea->comments->map(function ($comment) use ($idea) {
+        return [
+            'id' => $comment->id,
+            'content' => $comment->content,
+            'created_at' => $comment->created_at->diffForHumans(),
+            'delete_url' => route('comment.destroy', $comment),
+            'can_delete' => $idea->user_id === auth()->id() || $comment->user_id === auth()->id(),
+            'user' => [
+                'id' => $comment->user->id,
+                'name' => $comment->user->name,
+            ],
+        ];
+    })->values();
+@endphp
 
-<div class="mt-6" x-data="newCommentsComponent({{ $idea->id }}) ">
+<div class="mt-6" x-data="commentsComponent(@js($initialComments), {{ $idea->id }}, {{ auth()->id() ?? 'null' }}, {{ $idea->user_id }})">
     <div class="flex items-center justify-between">
-        <h2 class="text-xl font-bold">Comments (<span x-text="newComments.length"></span>)</h2>
+        <h2 class="text-xl font-bold">Comments (<span x-text="comments.length"></span>)</h2>
         @if ($idea->user_id !== auth()->id())
             <button
                 x-data
@@ -17,66 +32,27 @@
     </div>
 
     <div class="mt-6 space-y-3">
-        @foreach ($idea->comments as $comment)
+        <template x-for="comment in comments" :key="comment.id">
             <x-Ideacard>
-                <div class="flex justify-between items-center gap-x-3">
-                    <p class="text-sm">{{ $comment->content }}</p>
-                    @if ($idea->user_id === auth()->id() || $comment->user_id === auth()->id())
-                        <form action="{{ route('comment.destroy', $comment) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit"
-                                class="btn btn-outlined text-red-500/60 flex items-center gap-x-2 hover:text-red-500"
-                                data-test="delete-comment-button">
-                                <x-icons.delete-bin />
-                            </button>
-                        </form>
-                    @endif
+                <div class="flex items-center justify-between gap-x-3">
+                    <p class="text-sm" x-text="comment.content"></p>
+                    <form :action="comment.delete_url" method="POST" x-show="comment.can_delete && comment.delete_url">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit"
+                            class="btn btn-outlined text-red-500/60 flex items-center gap-x-2 hover:text-red-500"
+                            data-test="delete-comment-button">
+                            <x-icons.delete-bin />
+                        </button>
+                    </form>
                 </div>
                 <div class="mt-2 flex items-center gap-x-3">
-                    <span class="inline-flex items-center rounded-full bg-secondary/15 px-2 py-1 text-xs text-secondary">{{ $comment->user->name }}</span>
-                    <span class="text-xs text-muted-foreground">{{ $comment->created_at->diffForHumans() }}</span>
+                    <span class="inline-flex items-center rounded-full bg-secondary/15 px-2 py-1 text-xs text-secondary" x-text="comment.user.name"></span>
+                    <span class="text-xs text-muted-foreground" x-text="comment.created_at"></span>
                 </div>
             </x-Ideacard>
-        @endforeach
-    </div>
-
-    <div class="mt-6" x-show="newComments.length > 0">
-        <h3 class="text-sm font-semibold">New comments</h3>
-        <ul class="mt-2 space-y-1 text-sm">
-            <template x-for="comment in newComments" :key="comment.id">
-                <li x-text="comment.content"></li>
-            </template>
-        </ul>
+        </template>
     </div>
 </div>
-
-<script>
-    document.addEventListener('alpine:init', () => {
-        Alpine.data('newCommentsComponent', (ideaId) => ({
-            newComments: [],
-            seenCommentIds: new Set(),
-            init() {
-                if (!window.Echo) {
-                    return;
-                }
-
-                window.Echo.channel(`idea.${ideaId}`).listen('.comment.created', (event) => {
-                    const comment = event?.comment;
-
-                    if (!comment?.id || this.seenCommentIds.has(comment.id)) {
-                        return;
-                    }
-
-                    this.seenCommentIds.add(comment.id);
-                    this.newComments.unshift({
-                        id: comment.id,
-                        content: comment.content ?? 'New comment',
-                    });
-                });
-            },
-        }));
-    });
-</script>
 
 

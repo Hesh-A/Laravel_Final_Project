@@ -1,5 +1,20 @@
 <x-layout>
-    <div class="mx-auto w-full max-w-4xl py-8">
+    @php
+        $canEditIdea = $idea->user_id === auth()->id() || $idea->isCollaborator(auth()->user());
+    @endphp
+
+    <div class="mx-auto w-full max-w-4xl py-8" x-data="ideaAccessComponent({{ $idea->id }}, {{ auth()->id() ?? 'null' }}, {{ $canEditIdea ? 'true' : 'false' }})">
+
+        <x-layout.toast
+            type="success"
+            :closable="true"
+            dismiss-action="dismissApprovalMessage"
+            x-cloak
+            x-show="approvalMessage"
+            x-transition.opacity.duration.500ms
+        >
+            <p x-text="approvalMessage"></p>
+        </x-layout.toast>
 
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
@@ -10,29 +25,27 @@
             </a>
 
             <div class="flex flex-wrap items-center gap-3">
-                @if($idea->user_id === auth()->id() || $idea->isCollaborator(auth()->user()))
                 <button
                     x-data
+                    x-show="canEdit"
                     @click="$dispatch('open-modal', {name: 'edit-idea'})"
                     class="btn btn-outlined flex items-center gap-x-2 text-muted-foreground hover:text-foreground"
-                    data-test="edit-idea-button"                
+                    data-test="edit-idea-button"
                     >
                     <x-icons.external />
                     Edit Idea
                 </button>
-                @else
-                <form method="POST" action="{{ route('ideas.collaboration.request', $idea) }}">
+
+                <form method="POST" action="{{ route('ideas.collaboration.request', $idea) }}" x-show="!canEdit">
                     @csrf
                     <button
                         class="btn btn-outlined flex items-center gap-x-2 text-muted-foreground hover:text-foreground"
-                        data-test="edit-idea-button"                
+                        data-test="edit-idea-button"
                         >
                         <x-icons.external />
                         Request Edit Access
                     </button>
                 </form>
-                @endif
-                
 
                 @if ($idea->user_id === auth()->id())
                 <form method="POST" action="{{ route('idea.destroy', $idea) }}">
@@ -90,9 +103,6 @@
                 <div class="cursor-pointer text-foreground"> {{ $idea->description }} </div>
 
             </x-Ideacard>
-            
-
-
 
             <x-idea.steps-section :idea="$idea" />
 
