@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Actions\CreateComment;
+use App\Events\CommentDeleted;
 use App\Http\Requests\StoreCommentRequest;
+use App\Models\Comment;
 use App\Models\Idea;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Comment;
 
 class CommentController extends Controller
 {
@@ -22,10 +22,14 @@ class CommentController extends Controller
     {
         Gate::authorize('delete', $comment);
 
-        $comment->delete();
+        $commentId = $comment->id;
+        $ideaId = $comment->idea_id;
+        $idea = $comment->idea;
 
-        return redirect()->route('idea.show', $comment->idea)->with('success', 'Comment deleted successfully!');
+        Comment::query()->whereKey($commentId)->delete();
+
+        CommentDeleted::dispatch($commentId, $ideaId);
+
+        return redirect()->route('idea.show', $idea)->with('success', 'Comment deleted successfully!');
     }
-
-    
 }

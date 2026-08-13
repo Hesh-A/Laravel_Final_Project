@@ -4,7 +4,6 @@ namespace App\Policies;
 
 use App\Models\Comment;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class CommentPolicy
 {
@@ -18,7 +17,6 @@ class CommentPolicy
 
     public function delete(User $user, Comment $comment): bool
     {
-        return $comment->user->is($user);
+        return $comment->user->is($user) || $comment->idea->user->is($user);
     }
-
 }

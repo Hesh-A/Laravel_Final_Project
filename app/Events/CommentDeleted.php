@@ -2,24 +2,20 @@
 
 namespace App\Events;
 
-use App\Models\Comment;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class CommentCreated implements ShouldBroadcastNow
+class CommentDeleted implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
      * Create a new event instance.
      */
-    public function __construct(public Comment $comment)
-    {
-        //
-    }
+    public function __construct(public int $commentId, public int $ideaId) {}
 
     /**
      * Get the channels the event should broadcast on.
@@ -29,27 +25,21 @@ class CommentCreated implements ShouldBroadcastNow
     public function broadcastOn(): array
     {
         return [
-            new Channel('idea.'.$this->comment->idea_id),
+            new Channel('idea.'.$this->ideaId),
         ];
     }
 
     public function broadcastAs(): string
     {
-        return 'comment.created';
+        return 'comment.deleted';
     }
 
     public function broadcastWith(): array
     {
         return [
             'comment' => [
-                'id' => $this->comment->id,
-                'content' => $this->comment->content,
-                'idea_id' => $this->comment->idea_id,
-                'delete_url' => route('comment.destroy', $this->comment),
-                'user' => [
-                    'id' => $this->comment->user->id,
-                    'name' => $this->comment->user->name,
-                ],
+                'id' => $this->commentId,
+                'idea_id' => $this->ideaId,
             ],
         ];
     }
