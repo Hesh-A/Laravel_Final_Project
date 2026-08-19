@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\IdeaCollaborationController;
 
-Route::redirect('/', '/ideas');
+Route::statamic('/', 'home', ['load' => '/', 'layout' => 'layout'])->name('home');
 
 Route::get('/ideas', [IdeaController::class, 'index'])->name('idea.index')->middleware('auth');
 Route::get('/ideas/{idea}', [IdeaController::class, 'show'])->name('idea.show')->middleware('auth');
