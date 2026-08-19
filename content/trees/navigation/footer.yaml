@@ -1,0 +1,13 @@
+tree:
+  - id: ba9c7ac5-8f45-4cb0-b6c5-691d34d6cb6e
+    title: 'Sign in'
+    url: /login
+  - id: b7bb95cb-5708-43e6-bec0-63f6291a1394
+    title: Register
+    url: /register
+  - id: 989fd696-4352-4724-846d-76719695da0c
+    title: Contact
+    url: /contact
+  - id: 7ee60e94-1aa3-4b2a-99ad-6d9fdc176593
+    title: 'Our Blog Site'
+    url: /blog

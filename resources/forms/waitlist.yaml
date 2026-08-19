@@ -1,0 +1,11 @@
+title: 'Subscribe to Waitlist'
+fields:
+  -
+    handle: email
+    field:
+      type: text
+      input_type: email
+      display: Email address
+      validate:
+        - required
+        - email
