@@ -1,80 +1,93 @@
 <div x-data="{ open: false }">
-    <button
-        type="button"
-        class="btn btn-primary"
-        @click="open = true"
-    >
-        Join the waitlist
-    </button>
-
-    <div
-        x-show="open"
-        x-cloak
-
-        x-transition:enter="ease-out duration-300"
-        x-transition:enter-start="opacity-0 -translate-y-4 -translate-x-4"
-        x-transition:enter-end="opacity-100"
-
-        x-transition:leave="ease-in duration-150"
-        x-transition:leave-start="opacity-100"
-        x-transition:leave-end="opacity-0 -translate-y-4 -translate-x-4"
-        style="display: none;"
-
-        @keydown.escape.window="open = false"
-        class="fixed inset-0 z-50 grid place-items-center bg-black/50 px-4"
-        role="dialog"
-        aria-modal="true"
-        aria-label="Join the waiting list"
-    >
-        <div
-            class="mx-auto max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-card p-6 text-left shadow-2xl"
-            @click.outside="open = false"
+    {{ form:waitlist }}
+        <button
+            type="button"
+            class="btn btn-primary"
+            @click="open = true"
         >
-            <div class="flex items-start justify-between gap-4">
-                <div>
-                    <h2 class="text-xl font-semibold text-foreground">Join the waiting list</h2>
-                    <p class="mt-2 text-sm text-muted-foreground">Be the first to know when we launch.</p>
+            Join the waitlist
+        </button>
+
+        <div
+            x-show="open"
+            x-cloak
+
+            x-transition:enter="ease-out duration-300"
+            x-transition:enter-start="opacity-0 -translate-y-4 -translate-x-4"
+            x-transition:enter-end="opacity-100"
+
+            x-transition:leave="ease-in duration-150"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0 -translate-y-4 -translate-x-4"
+            style="display: none;"
+
+            @keydown.escape.window="open = false"
+            class="fixed inset-0 z-50 grid place-items-center bg-black/50 px-4"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Join the waiting list"
+        >
+            <div
+                class="mx-auto max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl border border-border bg-card p-6 text-left shadow-2xl shadow-black/10 sm:p-8"
+                @click.outside="open = false"
+            >
+                <div class="flex items-start justify-between gap-4">
+                    <div>
+                        <h2 class="text-xl font-semibold text-foreground">Join the waiting list</h2>
+                        <p class="mt-2 text-sm text-muted-foreground">Be the first to know when we launch.</p>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="text-sm text-muted-foreground hover:text-foreground"
+                        aria-label="Close waiting list form"
+                        @click="open = false"
+                    >
+                        Close
+                    </button>
                 </div>
 
-                <button
-                    type="button"
-                    class="text-sm text-muted-foreground hover:text-foreground"
-                    aria-label="Close waiting list form"
-                    @click="open = false"
-                >
-                    Close
-                </button>
-            </div>
-
-            {{ form:waitlist }}
                 {{ if success }}
-                    <p class="mt-6 text-primary">Thanks, you are on the waiting list.</p>
                 {{ else }}
-                    <div class="mt-6 grid gap-4">
+                    <div class="mt-7 grid gap-5">
                         {{ fields }}
                             <div>
-                                <label for="{{ id }}" class="text-sm font-medium text-foreground">{{ display }}</label>
+                                <label for="{{ id }}" class="text-sm font-medium text-foreground">{{ display }}
+
+                                    {{ if validate | contains('required') }}
+                                    <span class="text-danger" aria-hidden="true">*</span>
+                                    <span class="sr-only">required</span>
+                                    {{ /if }}
+                                </label>
                                 <input
                                     id="{{ id }}"
                                     name="{{ name }}"
                                     type="{{ input_type ?? 'text' }}"
                                     value="{{ value }}"
-                                    class="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2 text-foreground"
+                                    placeholder="{{ placeholder }}"
+                                    class="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2.5 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
                                     {{ if error }}aria-invalid="true"{{ /if }}
                                 >
 
                                 {{ if error }}
-                                    <p class="mt-1 text-sm text-danger">{{ error }}</p>
+                                    <p class="mt-1.5 text-sm text-danger">{{ error }}</p>
                                 {{ /if }}
                             </div>
                         {{ /fields }}
                     </div>
 
-                    <div class="mt-6 flex justify-center">
+                    <div class="mt-7 flex justify-end">
                         <button type="submit" class="btn btn-primary">Join the waiting list</button>
                     </div>
                 {{ /if }}
-            {{ /form:waitlist }}
+            </div>
         </div>
-    </div>
+
+        {{ if success }}
+            {{ partial:partials/toast
+                title="Thanks, you are on the waiting list."
+                message="We will let you know when we launch."
+            }}
+        {{ /if }}
+    {{ /form:waitlist }}
 </div>
