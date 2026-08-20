@@ -3,7 +3,7 @@
         $canEditIdea = $idea->user_id === auth()->id() || $idea->isCollaborator(auth()->user());
     @endphp
 
-    <div class="mx-auto w-full max-w-4xl py-8" x-data="ideaAccessComponent({{ $idea->id }}, {{ auth()->id() ?? 'null' }}, {{ $canEditIdea ? 'true' : 'false' }})">
+    <div class="mx-auto w-full max-w-6xl py-8" x-data="ideaAccessComponent({{ $idea->id }}, {{ auth()->id() ?? 'null' }}, {{ $canEditIdea ? 'true' : 'false' }})">
 
         <x-layout.toast
             type="success"
@@ -19,27 +19,27 @@
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
             <a href= "{{ route('idea.index') }}"
-                class="btn btn-outlined flex items-center gap-x-2 text-muted-foreground hover:text-foreground">
+                class="btn btn-outlined flex w-full items-center justify-center gap-x-2 text-muted-foreground hover:text-foreground sm:w-auto">
                 <x-icons.arrow-back />
                 Back to Ideas
             </a>
 
-            <div class="flex flex-wrap items-center gap-3">
+            <div class="flex w-full flex-col gap-3 sm:w-auto sm:flex-row sm:flex-wrap sm:items-center">
                 <button
                     x-data
                     x-show="canEdit"
                     @click="$dispatch('open-modal', {name: 'edit-idea'})"
-                    class="btn btn-outlined flex items-center gap-x-2 text-muted-foreground hover:text-foreground"
+                    class="btn btn-outlined flex w-full items-center justify-center gap-x-2 text-muted-foreground hover:text-foreground sm:w-auto"
                     data-test="edit-idea-button"
                     >
                     <x-icons.external />
                     Edit Idea
                 </button>
 
-                <form method="POST" action="{{ route('ideas.collaboration.request', $idea) }}" x-show="!canEdit">
+                <form method="POST" action="{{ route('ideas.collaboration.request', $idea) }}" x-show="!canEdit" class="w-full sm:w-auto">
                     @csrf
                     <button
-                        class="btn btn-outlined flex items-center gap-x-2 text-muted-foreground hover:text-foreground"
+                        class="btn btn-outlined flex w-full items-center justify-center gap-x-2 text-muted-foreground hover:text-foreground sm:w-auto"
                         data-test="edit-idea-button"
                         >
                         <x-icons.external />
@@ -48,11 +48,11 @@
                 </form>
 
                 @if ($idea->user_id === auth()->id())
-                <form method="POST" action="{{ route('idea.destroy', $idea) }}">
+                <form method="POST" action="{{ route('idea.destroy', $idea) }}" class="w-full sm:w-auto">
                     @csrf
                     @method('DELETE')
                     <button type="submit"
-                        class="btn btn-outlined text-red-500/60 flex items-center gap-x-2 hover:text-red-500"
+                        class="btn btn-outlined flex w-full items-center justify-center gap-x-2 border-red-500/60 text-red-500/60 hover:border-red-500 hover:text-red-500 sm:w-auto"
                         data-test="delete-idea-button">
                         <x-icons.delete-bin />
                         Delete Idea
