@@ -1,0 +1,47 @@
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        fields:
+          -
+            handle: firstName
+            field:
+              character_limit: 20
+              placeholder: 'Your first name goes here...'
+              type: text
+              display: 'First Name'
+              validate:
+                - required
+          -
+            handle: lastName
+            field:
+              character_limit: 25
+              placeholder: 'Your last name goes here...'
+              type: text
+              display: 'Last Name'
+          -
+            handle: email
+            field:
+              input_type: email
+              character_limit: 40
+              placeholder: name@gmail.com
+              type: text
+              display: Email
+          -
+            handle: phone
+            field:
+              input_type: tel
+              placeholder: '049 3672 827'
+              type: text
+              display: Phone
+              validate:
+                - required
+          -
+            handle: enquiry
+            field:
+              type: textarea
+              display: Enquiry
+              validate:
+                - required
+              placeholder: 'How can we help?'
