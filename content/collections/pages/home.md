@@ -6,9 +6,9 @@ template: home
 layout: layout
 hero_title: 'Turn a first thought into a clear next step.'
 updated_by: 2
-updated_at: 1787105981
+updated_at: 1787182584
 hero_description: 'Idea helps you capture what matters, shape the plan, and work with people who can help bring it to life.'
-teaser: 'Make space for better ideas'
+teaser: 'Make space for better thoughts'
 workspace_label: 'Your workspace'
 workspace_title: 'Ideas in motion'
 workspace_active_count: 2

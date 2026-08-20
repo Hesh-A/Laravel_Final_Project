@@ -9,14 +9,16 @@
         <nav aria-label="Footer navigation">
             <ul class="flex flex-wrap items-center gap-x-6 gap-y-3 text-sm text-muted-foreground">
                 {{ nav:footer }}
-                    <li>
-                        <a
-                            href="{{ url }}"
-                            class="transition-colors hover:text-foreground"
-                        >
-                            {{ title }}
-                        </a>
-                    </li>
+                    {{ if !logged_in || title == 'Contact' || title == 'Our Ideas' }}
+                        <li>
+                            <a
+                                href="{{ url }}"
+                                class="transition-colors hover:text-foreground"
+                            >
+                                {{ title }}
+                            </a>
+                        </li>
+                    {{ /if }}
                 {{ /nav:footer }}
             </ul>
         </nav>

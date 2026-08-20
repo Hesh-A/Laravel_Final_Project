@@ -1,25 +1,56 @@
-<nav class="border-border px-4 sm:px-6">
-    <div class="flex w-full flex-col gap-3 border-b border-border py-3 sm:h-16 sm:flex-row sm:items-center sm:justify-between sm:gap-0 sm:py-0">
+<nav x-data="{ open: false }" class="border-border px-4 sm:px-6">
+    <div class="flex w-full items-center justify-between border-b border-border py-3 sm:h-16 sm:py-0">
         <div class="shrink-0">
             <a href="/">
                 <img src="/images/logo.svg" alt="Idea Logo" width="100">
             </a>
         </div>
 
+        <button
+            type="button"
+            class="sm:hidden"
+            @click="open = !open"
+            :aria-expanded="open"
+            aria-controls="mobile-navigation"
+        >
+            <span class="sr-only">Toggle navigation</span>
+            Menu
+        </button>
+
         {{ if logged_in }}
-            <div class="flex flex-wrap items-center gap-3 sm:gap-x-6">
-                <a href="/ideas" class="btn btn-secondary">Open workspace</a>
-                <a href="/profile/edit" class="btn btn-secondary">Edit profile</a>
+            <div class="hidden flex-wrap items-center gap-3 sm:flex sm:gap-x-6">
+                <a href="/ideas" class="btn btn-outlined">Open workspace</a>
+                <a href="/profile/edit" class="btn btn-outlined">Edit profile</a>
                 <form action="/logout" method="POST">
                     {{ csrf_field }}
-                    <button type="submit" class="btn btn-danger">Sign out</button>
+                    <button type="submit" class="btn btn-outlined border-red-500/60 text-red-500 hover:border-red-500 hover:text-red-600">Sign out</button>
                 </form>
             </div>
         {{ else }}
-            <div class="flex flex-wrap items-center gap-3 sm:gap-x-6">
-                <a href="/login" class="btn btn-secondary">Sign in</a>
-                <a href="/register" class="btn">Register</a>
+            <div class="hidden flex-wrap items-center gap-3 sm:flex sm:gap-x-6">
+                <a href="/login" class="btn btn-outlined">Sign in</a>
+                <a href="/register" class="btn btn-outlined">Register</a>
             </div>
+        {{ /if }}
+    </div>
+
+<!-- Mobile navigation -->
+    <div
+        id="mobile-navigation"
+        x-show="open"
+        x-cloak
+        class="flex justify-between items-center gap-3 border-b border-border py-4 sm:hidden"
+    >
+        {{ if logged_in }}
+            <a href="/ideas" class="btn btn-outlined">Open workspace</a>
+            <a href="/profile/edit" class="btn btn-outlined">Edit profile</a>
+            <form action="/logout" method="POST">
+                {{ csrf_field }}
+                <button type="submit" class="btn btn-outlined border-red-500/60 text-red-500 hover:border-red-500 hover:text-red-600">Sign out</button>
+            </form>
+        {{ else }}
+            <a href="/login" class="btn btn-outlined">Sign in</a>
+            <a href="/register" class="btn btn-outlined">Register</a>
         {{ /if }}
     </div>
 </nav>
