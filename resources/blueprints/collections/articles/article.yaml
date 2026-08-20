@@ -19,7 +19,6 @@ tabs:
               type: assets
               display: 'Featured Image'
               max_files: 1
-              min_files: 1
           -
             handle: content
             field:
@@ -35,10 +34,11 @@ tabs:
               type: users
               display: Author
           -
-            handle: description
+            handle: summary
             field:
               type: textarea
-              display: Description
+              display: 'Article Summary'
+              placeholder: 'Please write a summary of your article to display on the card...'
   sidebar:
     display: Sidebar
     sections:
