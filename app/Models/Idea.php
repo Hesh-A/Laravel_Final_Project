@@ -6,6 +6,7 @@ namespace App\Models;
 
 use App\CollaborationStatus;
 use App\IdeaStatus;
+use Database\Factories\IdeaFactory;
 use Illuminate\Database\Eloquent\Casts\AsArrayObject;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -50,17 +51,19 @@ class Idea extends Model
 
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
-
         return $this->belongsTo(User::class);
     }
 
+    /** @return HasMany<Step, $this> */
     public function steps(): HasMany
     {
         return $this->hasMany(Step::class);
     }
 
+    /** @return HasMany<Comment, $this> */
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
@@ -71,6 +74,7 @@ class Idea extends Model
         return $this->collaborators()->where('user_id', $user->id)->where('status', CollaborationStatus::APPROVED)->exists();
     }
 
+    /** @return HasMany<IdeaCollaborator, $this> */
     public function collaborators(): HasMany
     {
         return $this->hasMany(IdeaCollaborator::class);

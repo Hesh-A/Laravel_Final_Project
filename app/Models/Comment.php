@@ -14,11 +14,13 @@ class Comment extends Model
 
     protected $fillable = ['idea_id', 'content'];
 
+    /** @return BelongsTo<Idea, $this> */
     public function idea(): BelongsTo
     {
         return $this->belongsTo(Idea::class);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

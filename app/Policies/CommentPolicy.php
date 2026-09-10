@@ -17,6 +17,9 @@ class CommentPolicy
 
     public function delete(User $user, Comment $comment): bool
     {
-        return $comment->user->is($user) || $comment->idea->user->is($user);
+        $commentUser = $comment->user;
+        $ideaOwner = $comment->idea->user;
+
+        return $commentUser->is($user) || $ideaOwner->is($user);
     }
 }

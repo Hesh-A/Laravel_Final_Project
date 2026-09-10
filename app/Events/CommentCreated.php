@@ -40,6 +40,8 @@ class CommentCreated implements ShouldBroadcastNow
 
     public function broadcastWith(): array
     {
+        $user = $this->comment->user;
+
         return [
             'comment' => [
                 'id' => $this->comment->id,
@@ -47,8 +49,8 @@ class CommentCreated implements ShouldBroadcastNow
                 'idea_id' => $this->comment->idea_id,
                 'delete_url' => route('comment.destroy', $this->comment),
                 'user' => [
-                    'id' => $this->comment->user->id,
-                    'name' => $this->comment->user->name,
+                    'id' => $user->id,
+                    'name' => $user->name,
                 ],
             ],
         ];

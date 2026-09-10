@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Models\Comment;
-use App\Models\Idea;
-use App\Models\IdeaCollaborator;
-
 use Database\Factories\UserFactory;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
@@ -39,19 +35,21 @@ class User extends Authenticatable
         ];
     }
 
+    /** @return HasMany<Idea, $this> */
     public function ideas(): HasMany
     {
         return $this->hasMany(Idea::class);
     }
 
+    /** @return HasMany<Comment, $this> */
     public function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
     }
 
+    /** @return HasMany<IdeaCollaborator, $this> */
     public function collaborations(): HasMany
     {
         return $this->hasMany(IdeaCollaborator::class);
     }
-
 }
