@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
 
@@ -78,5 +79,11 @@ class Idea extends Model
     public function collaborators(): HasMany
     {
         return $this->hasMany(IdeaCollaborator::class);
+    }
+
+    /** @return HasOne<IdeaWhiteboard, $this> */
+    public function whiteboard(): HasOne
+    {
+        return $this->hasOne(IdeaWhiteboard::class);
     }
 }
