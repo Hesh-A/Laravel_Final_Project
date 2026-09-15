@@ -17,3 +17,4 @@ registerCollaboratorComponent(Alpine);
 registerIdeaAccessComponent(Alpine);
 
 Alpine.start();
+import './whiteboard';

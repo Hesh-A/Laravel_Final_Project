@@ -63,7 +63,7 @@
                 type="textarea"
                 :value="$idea->description"
                 />
-
+         
 
                 <div class="space-y-3">
 

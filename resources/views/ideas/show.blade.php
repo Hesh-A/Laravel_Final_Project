@@ -104,6 +104,20 @@
 
             </x-Ideacard>
 
+            <h2 class="text-xl font-bold mt-6 mb-2"> Whiteboard </h2>
+
+            <div 
+            
+                data-whiteboard
+                 data-idea-id="{{ $idea->id }}"
+                 data-can-edit="{{ $canEditIdea ? 'true' : 'false' }}"
+                 data-initial-drawing='@json($idea->whiteboard?->drawing_data)'
+                 data-save-url="{{ route('ideas.whiteboard.update', $idea) }}"
+             >
+
+
+            </div>
+
             <x-idea.steps-section :idea="$idea" />
 
             <x-idea.links-section :idea="$idea" />
