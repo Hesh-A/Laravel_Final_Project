@@ -14,6 +14,7 @@ it('creates an idea', function () {
         ->fill('title', 'Build something')
         ->click('@status-button-pending')
         ->fill('description', 'Create happy path.')
+
         ->fill('@new-step', 'Step 1')
         ->click('@add-new-step-button')
         ->fill('@new-step', 'Step 2')

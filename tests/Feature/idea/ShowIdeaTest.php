@@ -7,7 +7,7 @@ it('displays an idea for an authenticated user', function () {
     $user = User::factory()->create();
     $this->actingAs($user);
 
-    $idea = Idea::factory()->create(['user_id' => $user->id]);
+    $idea = Idea::factory()->create();
 
     $response = $this->get(route('idea.show', $idea));
 

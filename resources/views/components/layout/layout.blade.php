@@ -18,15 +18,27 @@
 
 
   @session('success')
-    
-    <div x-data = "{ show: true }"
-      x-init = "setTimeout(() => show = false, 3000)"
-      x-show = "show"
+    <x-layout.toast
+      type="success"
+      x-data="{ show: true }"
+      x-init="setTimeout(() => show = false, 3000)"
+      x-show="show"
       x-transition.opacity.duration.500ms
-      class = "fixed bottom-3 right-3 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg">
+    >
+      {{ $value }}
+    </x-layout.toast>
+  @endsession
 
-            {{ $value }}
-    </div>
+  @session('error')
+    <x-layout.toast
+      type="error"
+      x-data="{ show: true }"
+      x-init="setTimeout(() => show = false, 3000)"
+      x-show="show"
+      x-transition.opacity.duration.500ms
+    >
+      {{ $value }}
+    </x-layout.toast>
   @endsession
 
 </body>

@@ -46,8 +46,14 @@
                         </div>
                         @endif                        
                         <h3 class="text-foreground text-lg"> {{ $idea->title }} </h3>
+                        <p class="mt-2 text-xs">
+                        <span class="inline-flex items-center rounded-full bg-secondary/15 px-2 py-1 text-secondary">
+                            Created by {{ $idea->user->name }}
+                        </span>
+                        </p>
 
-                        <x-idea.statuscard status="{{ $idea->status }}">
+
+                        <x-idea.statuscard class="mt-2" status="{{ $idea->status }}">
                             {{ $idea->status->label() }}
                         </x-idea.statuscard>
                         <p class="text-sm mt-2"> {{ $idea->description }} </p>
@@ -64,9 +70,8 @@
     </div>
 
     <!-- Modal for creating a new idea -->
-    <x-idea.modal >
-        
 
+    <x-idea.modal>
     </x-idea.modal>
 
 </x-layout>

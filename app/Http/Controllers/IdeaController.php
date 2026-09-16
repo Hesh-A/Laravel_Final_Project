@@ -7,39 +7,27 @@ namespace App\Http\Controllers;
 use App\Actions\CreateIdea;
 use App\Actions\UpdateIdea;
 use App\Http\Requests\IdeaRequest;
-use App\IdeaStatus;
+use App\Actions\ListIdea;
+use App\Enums\IdeaStatus;
+use App\CollaborationStatus;
 use App\Models\Idea;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use App\Models\Comment;
 
 class IdeaController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, ListIdea $action)
     {
 
-        $user = Auth::user();
-
-        $status = IdeaStatus::tryFrom($request->status ?? '');
-
-        $ideas = $user
-            ->ideas()
-            ->when($status, fn ($query, $status) => $query->where('status', $status))
-            ->get();
+        $ideas = $action->handle($request->all());
 
         return view('ideas.index', [
             'ideas' => $ideas,
-            'counts' => Idea::statusCounts($user),
+            'counts' => Idea::statusCounts($ideas),
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create(): void
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -56,20 +44,17 @@ class IdeaController extends Controller
      */
     public function show(Idea $idea)
     {
+        Gate::authorize('canView', $idea);
 
-        Gate::authorize('canAccess', $idea);
-
+        $idea->load('comments.user', 'collaborators.user', 'steps');
+        $pendingCollaborators = $idea->collaborators()
+         ->where('status', CollaborationStatus::PENDING)
+         ->with('user')
+         ->get();
         return view('ideas.show', [
             'idea' => $idea,
+            'pendingCollaborators' => $pendingCollaborators,
         ]);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Idea $idea): void
-    {
-        //
     }
 
     /**
@@ -78,7 +63,7 @@ class IdeaController extends Controller
     public function update(IdeaRequest $request, Idea $idea, UpdateIdea $action)
     {
 
-        Gate::authorize('canAccess', $idea);
+        Gate::authorize('canModify', $idea);
 
         $action->handle($request->safe()->all(), $idea);
 
@@ -91,7 +76,7 @@ class IdeaController extends Controller
     public function destroy(Idea $idea)
     {
         // authorize first
-        Gate::authorize('canAccess', $idea);
+        Gate::authorize('canModify', $idea);
 
         $idea->delete();
 

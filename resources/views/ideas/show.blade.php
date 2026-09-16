@@ -1,5 +1,20 @@
 <x-layout>
-    <div class="mx-auto w-full max-w-4xl py-8">
+    @php
+        $canEditIdea = $idea->user_id === auth()->id() || $idea->isCollaborator(auth()->user());
+    @endphp
+
+    <div class="mx-auto w-full max-w-4xl py-8" x-data="ideaAccessComponent({{ $idea->id }}, {{ auth()->id() ?? 'null' }}, {{ $canEditIdea ? 'true' : 'false' }})">
+
+        <x-layout.toast
+            type="success"
+            :closable="true"
+            dismiss-action="dismissApprovalMessage"
+            x-cloak
+            x-show="approvalMessage"
+            x-transition.opacity.duration.500ms
+        >
+            <p x-text="approvalMessage"></p>
+        </x-layout.toast>
 
         <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 
@@ -12,14 +27,27 @@
             <div class="flex flex-wrap items-center gap-3">
                 <button
                     x-data
+                    x-show="canEdit"
                     @click="$dispatch('open-modal', {name: 'edit-idea'})"
                     class="btn btn-outlined flex items-center gap-x-2 text-muted-foreground hover:text-foreground"
-                    data-test="edit-idea-button"                
+                    data-test="edit-idea-button"
                     >
                     <x-icons.external />
                     Edit Idea
                 </button>
 
+                <form method="POST" action="{{ route('ideas.collaboration.request', $idea) }}" x-show="!canEdit">
+                    @csrf
+                    <button
+                        class="btn btn-outlined flex items-center gap-x-2 text-muted-foreground hover:text-foreground"
+                        data-test="edit-idea-button"
+                        >
+                        <x-icons.external />
+                        Request Edit Access
+                    </button>
+                </form>
+
+                @if ($idea->user_id === auth()->id())
                 <form method="POST" action="{{ route('idea.destroy', $idea) }}">
                     @csrf
                     @method('DELETE')
@@ -27,11 +55,17 @@
                         class="btn btn-outlined text-red-500/60 flex items-center gap-x-2 hover:text-red-500"
                         data-test="delete-idea-button">
                         <x-icons.delete-bin />
-                        Delete Idea</button>
+                        Delete Idea
+                    </button>
                 </form>
+                @endif
+
+
             </div>
 
         </div>
+
+
 
         <div class="mt-8 space-y-6">
             
@@ -44,6 +78,12 @@
             @endif
             <h1 class="text-3xl font-bold sm:text-4xl"> {{ $idea->title }} </h1>
 
+            <p class="mt-2 text-xs">
+            <span class="inline-flex items-center rounded-full bg-secondary/15 px-2 py-1 text-secondary">
+            Created by {{ $idea->user->name }}
+            </span>
+           </p>            
+
             <div class= "mt-2 flex gap-x-3  items-center">
                 <x-idea.statuscard status="{{ $idea->status }}">
                     {{ $idea->status->label() }}
@@ -51,66 +91,31 @@
                 <div class= " text-muted-foreground text-sm"> Created: {{ $idea->created_at->diffForHumans() }}
 
                 </div>
-
-
             </div>
+
+            @if ($idea->user_id === auth()->id())
+                <x-idea.collaborator-section :idea="$idea" :pendingCollaborators="$pendingCollaborators" />
+            @endif
+            
+        
             <x-Ideacard>
 
                 <div class="cursor-pointer text-foreground"> {{ $idea->description }} </div>
 
             </x-Ideacard>
 
-            @if ($idea->steps->count())
-                <h2 class="text-xl font-bold mt-6 mb-2"> Actionable Steps </h2>
-                <div class= "space-y-3">
-                    @foreach ($idea->steps as $step)
-                        <x-Ideacard>
+            <x-idea.steps-section :idea="$idea" />
 
-                            <form action="{{ route('step.update', $step) }}" method="POST">
-                                @csrf
-                                @method('PATCH')
-                                <div class = "flex items-center gap-x-3">
+            <x-idea.links-section :idea="$idea" />
 
-                                    <button type="submit" role="checkbox"
-                                        aria-checked="{{ $step->is_completed ? 'true' : 'false' }}"
-                                        class="size-4 flex items-center justify-center rounded-lg text-primary-foreground border
-                                    border-primary hover:bg-primary/30 {{ $step->is_completed ? 'bg-primary' : '' }}">
-                                        &check;
-                                    </button>
-
-                                    <span
-                                        class=" {{ $step->is_completed ? ' line-through text-muted-foreground' : '' }}">
-                                        {{ $step->description }} </span>
-
-
-
-                                </div>
-                            </form>
-
-                        </x-Ideacard>
-                    @endforeach
-                </div>
-            @endif
-
-            @if ($idea->links)
-                <h2 class="text-xl font-bold mt-6 mb-2"> Links </h2>
-                <div class= "space-y-3">
-                    @foreach ($idea->links as $link)
-                        <x-Ideacard :href="$link"
-                            class="cursor-pointer break-all text-primary/80
-                            hover:text-primary flex items-center gap-x-3
-                            font-medium">
-
-                            <x-icons.external class="text-muted-foreground" />
-                            {{ $link }}
-
-                        </x-Ideacard>
-                    @endforeach
-                </div>
-            @endif
+            <x-idea.comments-section :idea="$idea" />
 
         </div>
       <!-- Modal for editing an idea -->
       <x-idea.modal :idea="$idea" />
+      <!-- Modal for creating a comment -->
+      <x-comments.modal :idea="$idea" />
+
+
     </div>
 </x-layout>
