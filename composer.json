@@ -11,11 +11,15 @@
     "require": {
         "php": "^8.3",
         "laravel/framework": "^13.8",
-        "laravel/tinker": "^3.0"
+        "laravel/reverb": "^1.11",
+        "laravel/tinker": "^3.0",
+        "pusher/pusher-php-server": "^7.3",
+        "statamic/cms": "^6.27"
     },
     "require-dev": {
         "driftingly/rector-laravel": "^2.5",
         "fakerphp/faker": "^1.23",
+        "larastan/larastan": "^3.10",
         "laravel/boost": "^2.4",
         "laravel/pail": "^1.2.5",
         "laravel/pao": "^1.0.6",
@@ -57,13 +61,20 @@
             "vendor/bin/pint"
 
         ],
+
+        "pre-update-cmd": [ 
+        "Statamic\\Console\\Composer\\Scripts::preUpdateCmd" 
+        ], 
+
+
         "test": [
             "@php artisan config:clear --ansi @no_additional_args",
             "@php artisan test"
         ],
         "post-autoload-dump": [
             "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump",
-            "@php artisan package:discover --ansi"
+            "@php artisan package:discover --ansi",
+            "@php artisan statamic:install --ansi" 
         ],
         "post-update-cmd": [
             "@php artisan vendor:publish --tag=laravel-assets --ansi --force"

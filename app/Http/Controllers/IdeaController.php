@@ -43,7 +43,7 @@ class IdeaController extends Controller
     {
         Gate::authorize('canView', $idea);
 
-        $idea->load('comments.user', 'collaborators.user', 'steps');
+        $idea->load('comments.user', 'collaborators.user', 'steps', 'whiteboard');
         $pendingCollaborators = $idea->collaborators()
             ->where('status', CollaborationStatus::PENDING)
             ->with('user')

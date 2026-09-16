@@ -4,7 +4,7 @@
 
 
 @php
-    $classes = 'inline-block text-xs font-bold  border px-2 py-1 rounded-full';
+    $classes = 'inline-block text-xs  border px-2 py-1 rounded-full';
 
     if($status === 'pending'){
 

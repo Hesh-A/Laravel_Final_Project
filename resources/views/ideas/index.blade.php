@@ -1,17 +1,24 @@
 <x-layout>
 
 
-    <div class="w-full">
+    <div class="mx-auto w-full max-w-6xl py-8">
 
         <header class="py-8 md:py-12">
-            <h1 class="text-3xl font-bold sm:text-4xl"> Your Ideas </h1>
+           <p class="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+               Make space for better ideas
+           </p>
+            <h1 class="mt-4 text-3xl font-bold sm:text-5xl"> Your Ideas </h1>
 
-            <p class="text-sm text-muted-foreground mt-2">
-                Make a plan! Capture your ideas and thoughts in one place.
-            </p>
 
             <x-Ideacard x-data @click="$dispatch('open-modal', {name: 'create-idea'})" is="button" type="button"
-                data-test="create-idea-button" class="mt-10 cursor-pointer flex items-center justify-center text-gray-200/50 h-32 text-left w-full">
+                data-test="create-idea-button" 
+                class="mt-10 cursor-pointer flex items-center 
+                justify-center text-gray-200/50 h-32 text-left w-full
+                shadow-2xl shadow-black/20 transition duration-300 hover:-translate-y-2 
+                hover:border-primary/40 hover:shadow-xl 
+                hover:shadow-primary/10
+         
+                ">
                 <p> Click here to create a new idea! </p>
             </x-Ideacard>
 
@@ -37,27 +44,35 @@
             <div class="grid  md:grid-cols-2 gap-6">
 
                 @forelse ($ideas as $idea)
-                    <x-Ideacard href="{{ route('idea.show', $idea) }}">
-                        @if ($idea->image_path)
-
-                        <div class="mb-4 -mx-4 -mt-4 h-48 overflow-hidden rounded-t-lg">
-                            <img src="{{ asset('storage/' . $idea->image_path) }}" alt="{{ $idea->title }}"
-                                class="h-full w-full object-cover">
+                    <x-Ideacard href="{{ route('idea.show', $idea) }}" class="cursor-pointer transition duration-300 hover:-translate-y-2 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
+                        <div class="-mx-4 -mt-4 mb-4 flex h-48 items-center justify-center overflow-hidden rounded-t-lg bg-background/60">
+                            @if ($idea->image_path)
+                                <img src="{{ asset('storage/' . $idea->image_path) }}" alt="{{ $idea->title }}"
+                                    class="h-full w-full object-cover">
+                            @else
+                                <span class="text-xs uppercase tracking-[0.18em] text-muted-foreground/60">No image</span>
+                            @endif
                         </div>
-                        @endif                        
-                        <h3 class="text-foreground text-lg"> {{ $idea->title }} </h3>
-                        <p class="mt-2 text-xs">
-                        <span class="inline-flex items-center rounded-full bg-secondary/15 px-2 py-1 text-secondary">
-                            Created by {{ $idea->user->name }}
-                        </span>
-                        </p>
+                        <div class="grid gap-5 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-start">
+                            <div>
+                                <h3 class="text-lg text-foreground"> {{ $idea->title }} </h3>
+                                <p class="mt-2 text-sm"> {{ $idea->description }} </p>
+                                <span class="mt-2 block text-xs text-muted-foreground">
+                                    Created By {{ $idea->user->name }}
+                                </span>
+                            </div>
 
+                            <div class="flex flex-wrap items-center gap-2 sm:flex-col sm:items-end">
 
-                        <x-idea.statuscard class="mt-2" status="{{ $idea->status }}">
-                            {{ $idea->status->label() }}
-                        </x-idea.statuscard>
-                        <p class="text-sm mt-2"> {{ $idea->description }} </p>
-                        <div class= "text-xs mt-2"> {{ $idea->created_at->diffForHumans() }} </div>
+                                <x-idea.statuscard status="{{ $idea->status }}">
+                                    {{ $idea->status->label() }}
+                                </x-idea.statuscard>
+
+                                <span class="text-xs text-muted-foreground">
+                                    {{ $idea->created_at->diffForHumans() }}
+                                </span>
+                            </div>
+                        </div>
                     </x-Ideacard>
                 @empty
 

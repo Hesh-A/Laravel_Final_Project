@@ -1,0 +1,147 @@
+tabs:
+  hero:
+    display: Hero
+    sections:
+      -
+        display: 'Hero Content'
+        fields:
+          -
+            handle: title
+            field:
+              type: text
+              required: true
+              validate:
+                - required
+          -
+            handle: teaser
+            field:
+              type: text
+              display: Teaser
+          -
+            handle: hero_title
+            field:
+              type: text
+              display: 'Hero Title'
+          -
+            handle: hero_description
+            field:
+              type: textarea
+              display: 'Hero Description'
+  workspace:
+    display: Workspace
+    sections:
+      -
+        display: 'Workspace Preview'
+        fields:
+          -
+            handle: workspace_label
+            field:
+              type: text
+              display: 'Workspace Label'
+              width: 50
+          -
+            handle: workspace_title
+            field:
+              type: text
+              display: 'Workspace Title'
+              width: 50
+          -
+            handle: workspace_active_count
+            field:
+              type: integer
+              display: 'Active Ideas'
+          -
+            handle: workspace_ideas
+            field:
+              type: replicator
+              display: 'Workspace Ideas'
+              collapse: true
+              sets:
+                main:
+                  display: Main
+                  sets:
+                    idea:
+                      display: Idea
+                      fields:
+                        -
+                          handle: title
+                          field:
+                            type: text
+                            display: 'Idea Title'
+                            width: 50
+                        -
+                          handle: description
+                          field:
+                            type: textarea
+                            display: 'Idea Description'
+                            width: 50
+                        -
+                          handle: status
+                          field:
+                            type: text
+                            display: Status
+                            width: 33
+                        -
+                          handle: steps
+                          field:
+                            type: integer
+                            display: Steps
+                            width: 33
+                        -
+                          handle: updated
+                          field:
+                            type: text
+                            display: 'Updated Text'
+                            width: 33
+  features:
+    display: Features
+    sections:
+      -
+        display: 'Marketing Features'
+        fields:
+          -
+            handle: show_waitlist
+            field:
+              type: toggle
+              display: 'Show Waiting List'
+              default: true
+          -
+            handle: marketing_features
+            field:
+              type: replicator
+              display: 'Marketing Features'
+              collapse: true
+              sets:
+                main:
+                  display: Main
+                  sets:
+                    feature:
+                      display: Feature
+                      fields:
+                        -
+                          handle: number
+                          field:
+                            type: text
+                            display: Number
+                        -
+                          handle: title
+                          field:
+                            type: text
+                            display: Title
+                        -
+                          handle: description
+                          field:
+                            type: textarea
+                            display: Description
+  sidebar:
+    display: Sidebar
+    sections:
+      -
+        fields:
+          -
+            handle: slug
+            field:
+              type: slug
+              localizable: true
+              validate: 'max:200'
+title: Marketing

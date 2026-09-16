@@ -1,0 +1,16 @@
+title: Articles
+icon: collections
+template: articles/show
+layout: layout
+mount: d7365609-23b3-4430-907f-cc3042858170
+revisions: false
+route: '/{mount}/{slug}'
+date: true
+sort_dir: asc
+date_behavior:
+  past: public
+  future: private
+preview_targets:
+  - label: Entry
+    url: '{permalink}'
+    refresh: true

@@ -1,0 +1,28 @@
+<article class="group flex min-h-[240px] h-full flex-col rounded-2xl border border-border bg-card p-6 shadow-lg shadow-black/10 transition duration-300 hover:-translate-y-2 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10">
+    <div class="mb-5 flex items-center justify-between gap-3 text-[11px] font-medium uppercase tracking-[0.18em] text-muted-foreground">
+        <span>Article</span>
+        <time datetime="{{ date format='Y-m-d' }}">{{ date format='M j, Y' }}</time>
+    </div>
+
+    <h2 class="text-2xl font-semibold leading-tight text-foreground group-hover:text-primary">
+        {{ title }}
+    </h2>
+
+    <p class="mt-4 flex-1 text-base leading-7 text-muted-foreground">
+        {{ summary }}
+    </p>
+
+    <p class="mt-4 text-base leading-7 text-muted-foreground">
+        {{ if author }}
+            By
+            {{ author }}
+                {{ if !first }} & {{ /if }}{{ name }}
+            {{ /author }}
+        {{ /if }}
+    </p>
+
+    <a href="{{ url }}" class="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary transition-colors hover:text-primary/80">
+        Read article
+        <span aria-hidden="true">→</span>
+    </a>
+</article>

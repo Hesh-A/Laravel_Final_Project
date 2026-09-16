@@ -1,0 +1,13 @@
+title: Footer
+tabs:
+  main:
+    display: Main
+    sections:
+      -
+        display: Content
+        fields:
+          -
+            handle: description
+            field:
+              type: textarea
+              display: 'Footer Description'

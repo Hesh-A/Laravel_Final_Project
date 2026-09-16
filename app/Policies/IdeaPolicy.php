@@ -14,7 +14,7 @@ class IdeaPolicy
      */
     public function canModify(User $user, Idea $idea): bool
     {
-        return $idea->user->is($user);
+        return $idea->user->is($user) || $idea->isCollaborator($user);
     }
 
     public function canView(User $user, Idea $idea): bool

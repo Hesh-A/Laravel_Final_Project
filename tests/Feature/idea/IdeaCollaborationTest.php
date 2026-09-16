@@ -107,6 +107,7 @@ it('prevents non owners from approving collaborations', function () {
         ->patch(route('collaborator.approve', $pendingCollaborator));
 
     $response->assertForbidden();
+    $response->assertSee('You are not authorized to do that.');
 
     $this->assertDatabaseHas('idea_collaborators', [
         'id' => $pendingCollaborator->id,

@@ -12,7 +12,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\IdeaCollaborationController;
 
-Route::redirect('/', '/ideas');
+use App\Http\Controllers\WhiteboardController;
+
+Route::statamic('/', 'home', ['load' => '/', 'layout' => 'layout'])->name('home');
 
 Route::get('/ideas', [IdeaController::class, 'index'])->name('idea.index')->middleware('auth');
 Route::get('/ideas/{idea}', [IdeaController::class, 'show'])->name('idea.show')->middleware('auth');
@@ -37,3 +39,8 @@ Route::get('/login', [AuthenticatedSessionController::class, 'create'])->name('l
 Route::post('/login', [AuthenticatedSessionController::class, 'store'])->middleware('guest');
 
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout')->middleware('auth');
+
+
+Route::patch('/ideas/{idea}/whiteboard', [WhiteboardController::class, 'update'])
+    ->name('ideas.whiteboard.update')
+    ->middleware('auth');

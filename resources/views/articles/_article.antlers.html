@@ -1,0 +1,52 @@
+<article class="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:py-16">
+    <header class="mb-10">
+        <div class="mt-6 flex items-center justify-between">
+            <p class="text-sm font-semibold uppercase tracking-[0.2em] text-primary">
+                Article
+            </p>
+
+            <a href="/blog" class="btn btn-outlined text-muted-foreground hover:text-foreground">
+                Go back to articles
+            </a>
+        </div>
+
+        <h1 class="mt-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
+            {{ title }}
+        </h1>
+
+        <div class="mt-6 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+            <time datetime="{{ date format='Y-m-d' }}">{{ date format='M j, Y' }}</time>
+
+            {{ if author }}
+                <span aria-hidden="true">•</span>
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex h-7 w-7 items-center justify-center rounded-full border border-primary/20 bg-primary/10 text-xs font-semibold text-primary">
+                        {{ author }}
+                            {{ if first }}{{ name | substr:0:1 | upper }}{{ /if }}
+                        {{ /author }}
+                    </span>
+                    <span>
+                        By
+                        {{ author }}
+                            {{ if !first }} & {{ /if }}{{ name }}
+                        {{ /author }}
+                    </span>
+                </div>
+            {{ /if }}
+        </div>
+    </header>
+
+    {{ if featured_image }}
+        {{ featured_image }}
+            <div class="mb-10 overflow-hidden rounded-[28px] border border-border bg-card shadow-2xl shadow-black/10">
+                <img src="{{ url }}" alt="{{ alt ?? title }}" class="h-72 w-full object-cover sm:h-[420px]" />
+            </div>
+        {{ /featured_image }}
+    {{ /if }}
+
+    <div class="rounded-[28px] border border-border bg-card p-6 shadow-lg shadow-black/10 sm:p-8 lg:p-10">
+        <div class="space-y-6 text-lg leading-8 text-foreground/90">
+            {{ content }}
+        </div>
+    </div>
+</article>

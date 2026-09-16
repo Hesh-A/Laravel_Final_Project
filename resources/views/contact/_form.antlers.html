@@ -1,0 +1,42 @@
+<div class="rounded-2xl border border-border bg-card p-6 shadow-2xl shadow-black/10 transition duration-300 hover:-translate-y-2 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/10 sm:p-8">
+    {{ form:contact_us }}
+        {{ if success }}
+            <div class="rounded-xl border border-primary/30 bg-primary/10 p-5" role="status" aria-live="polite">
+                <p class="font-semibold text-primary">Thanks, your enquiry has been received.</p>
+                <p class="mt-2 text-sm text-muted-foreground">We will be in touch as soon as we can.</p>
+            </div>
+        {{ else }}
+            <div class="grid gap-5 sm:grid-cols-2">
+                {{ fields }}
+                    <div class="{{ if handle === 'enquiry' }}sm:col-span-2{{ /if }}">
+                        <label for="{{ id }}" class="text-sm font-medium text-foreground">
+                            {{ display }}
+                            {{ if validate | contains('required') }}
+                                <span class="text-danger" aria-hidden="true">*</span>
+                                <span class="sr-only">required</span>
+                            {{ /if }}
+                        </label>
+                        <input
+                            id="{{ id }}"
+                            name="{{ name }}"
+                            type="{{ input_type ?? 'text' }}"
+                            value="{{ value }}"
+                            placeholder="{{ placeholder }}"
+                            class="mt-2 w-full rounded-lg border border-input bg-background px-3 py-2.5 text-foreground outline-none transition placeholder:text-muted-foreground focus:border-primary focus:ring-2 focus:ring-primary/20"
+                            {{ if validate | contains('required') }}required aria-required="true"{{ /if }}
+                            {{ if error }}aria-invalid="true"{{ /if }}
+                        >
+
+                        {{ if error }}
+                            <p class="mt-1.5 text-sm text-danger">{{ error }}</p>
+                        {{ /if }}
+                    </div>
+                {{ /fields }}
+            </div>
+
+            <div class="mt-7 flex justify-end">
+                <button type="submit" class="btn btn-primary">Send message</button>
+            </div>
+        {{ /if }}
+    {{ /form:contact_us }}
+</div>

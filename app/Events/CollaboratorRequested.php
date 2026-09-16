@@ -37,6 +37,8 @@ class CollaboratorRequested implements ShouldBroadcastNow
 
     public function broadcastWith(): array
     {
+        $user = $this->collaborator->user;
+
         return [
             'collaborator' => [
                 'id' => $this->collaborator->id,
@@ -45,8 +47,8 @@ class CollaboratorRequested implements ShouldBroadcastNow
                 'status' => $this->collaborator->status->value,
                 'approve_url' => route('collaborator.approve', $this->collaborator),
                 'user' => [
-                    'id' => $this->collaborator->user->id,
-                    'name' => $this->collaborator->user->name,
+                    'id' => $user->id,
+                    'name' => $user->name,
                 ],
             ],
         ];

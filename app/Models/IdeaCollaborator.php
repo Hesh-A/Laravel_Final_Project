@@ -19,11 +19,13 @@ class IdeaCollaborator extends Model
         'status' => CollaborationStatus::class,
     ];
 
+    /** @return BelongsTo<Idea, $this> */
     public function idea(): BelongsTo
     {
         return $this->belongsTo(Idea::class);
     }
 
+    /** @return BelongsTo<User, $this> */
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
