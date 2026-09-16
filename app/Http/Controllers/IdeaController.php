@@ -5,15 +5,13 @@ declare(strict_types=1);
 namespace App\Http\Controllers;
 
 use App\Actions\CreateIdea;
-use App\Actions\UpdateIdea;
-use App\Http\Requests\IdeaRequest;
 use App\Actions\ListIdea;
-use App\Enums\IdeaStatus;
+use App\Actions\UpdateIdea;
 use App\CollaborationStatus;
+use App\Http\Requests\IdeaRequest;
 use App\Models\Idea;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
-use App\Models\Comment;
 
 class IdeaController extends Controller
 {
@@ -27,7 +25,6 @@ class IdeaController extends Controller
             'counts' => Idea::statusCounts($ideas),
         ]);
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -48,9 +45,10 @@ class IdeaController extends Controller
 
         $idea->load('comments.user', 'collaborators.user', 'steps');
         $pendingCollaborators = $idea->collaborators()
-         ->where('status', CollaborationStatus::PENDING)
-         ->with('user')
-         ->get();
+            ->where('status', CollaborationStatus::PENDING)
+            ->with('user')
+            ->get();
+
         return view('ideas.show', [
             'idea' => $idea,
             'pendingCollaborators' => $pendingCollaborators,
